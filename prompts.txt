@@ -1,0 +1,22 @@
+# Byte Size and Time Duration Parsers
+"How can the Byte Size unit be parsed and converted into standard units (KB, MB, GB)?"
+"How can time duration units be parsed and converted (e.g., minutes to seconds)?"
+"Implement unit conversions for Byte Size and Time Duration with correct syntax."
+
+# Aggregate Directive Prompts
+"How can the AggregateStats directive aggregate data for Byte Size and Time Duration?"
+"What is the best way to calculate averages or percentiles using the new aggregate directive?"
+
+# Grammar and API Updates
+"Update the grammar to handle new Byte Size and Time Duration units."
+"How should the new APIs handle input data for Byte Size and Time Duration units?"
+"Ensure that the aggregate directive works seamlessly with the updated API."
+
+# Unit Conversion and Calculation Prompts
+"Convert 250 KB to MB and display the result."
+"Calculate the average of the following time durations: 3h 45m, 1h 30m, and 2h 15m."
+
+# Test Generation Prompts for New Features
+"Generate tests to verify the correctness of the Byte Size parser."
+"Write tests to ensure proper handling of time duration unit conversions."
+"Create edge case tests for the AggregateStats directive to handle large datasets."
