@@ -316,6 +316,19 @@ public final class RecipeVisitor extends DirectivesBaseVisitor<RecipeSymbol.Buil
     builder.addToken(new TextList(strs));
     return builder;
   }
+  @Override
+public RecipeSymbol.Builder visitByteSizeArg(DirectivesParser.ByteSizeArgContext ctx) {
+  String value = ctx.getText(); // or use ctx.Number().getText() + ctx.ByteUnit().getText() if rule is more detailed
+  builder.addToken(new Text(value)); // or define a specific ByteSize Token type if needed
+  return builder;
+}
+@Override
+public RecipeSymbol.Builder visitTimeDurationArg(DirectivesParser.TimeDurationArgContext ctx) {
+  String value = ctx.getText(); // or ctx.Number().getText() + ctx.TimeUnit().getText()
+  builder.addToken(new Text(value)); // or use a new Duration Token type if defined
+  return builder;
+}
+
 
   private SourceInfo getOriginalSource(ParserRuleContext ctx) {
     int a = ctx.getStart().getStartIndex();
