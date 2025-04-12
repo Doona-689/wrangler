@@ -1,3 +1,8 @@
+#CDAP Wrangler Enhancement: Byte Size and Time Duration Units
+[![Build Status](https://cdap.io/buildStatus/icon?job=cdap-wrangler/master)](https://cdap.io/job/cdap-wrangler/master/)
+[![Maven Central](https://img.shields.io/maven-central/v/io.cdap.wrangler/wrangler-core.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:io.cdap.wrangler)
+*CDAP Wrangler* is a powerful data preparation and transformation engine using a directive-based DSL. This enhanced version introduces native support for *Byte Size* (e.g., 10MB, 1.5GB) and *Time Duration* (e.g., 200ms, 3s) units within recipes—making it easier to work with system metrics, log data, and data transformation flows.
+
 # Data Prep
 
 ![cm-available](https://cdap-users.herokuapp.com/assets/cm-available.svg)
@@ -19,6 +24,32 @@ are manually created.
   * [Data Prep Cheatsheet](wrangler-docs/cheatsheet.md)
 
 ## New Features
+
+
+### Key Features:
+
+- *Lexer/Grammar Extension*  
+  Added BYTE_SIZE and TIME_DURATION tokens in Directives.g4.
+
+- *API Updates*  
+  - Added ByteSize.java and TimeDuration.java tokens under wrangler-api.
+  - Can parse strings like "10KB" or "1.5s" and retrieve values in canonical units.
+
+- *Core Parser Updates*  
+  - New visit methods (e.g., visitByteSizeArg, visitTimeDurationArg) added in RecipeVisitor.java.
+  - Integrated token types into TokenGroup.
+
+- *New Directive*: aggregate-stats  
+  Aggregates columns with byte size and time duration data and outputs statistical summaries like total or average.
+  ## New Directive: AggregateStats
+
+This directive computes total or average of byte size and/or time duration columns with automatic unit handling and conversion.
+## Overview
+
+Wrangler provides a DSL to apply transformation logic over structured and semi-structured data. This enhancement adds *native parsing support* for byte size and time duration units, grammar changes to support them, new token definitions in the API, and an aggregation directive for statistical computations.
+
+
+
 
 More [here](wrangler-docs/upcoming-features.md) on upcoming features.
 
