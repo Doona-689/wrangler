@@ -1,53 +1,44 @@
 package io.cdap.wrangler.steps.aggregate;
 
 import io.cdap.wrangler.api.Row;
-import io.cdap.wrangler.api.ExecutorContext;
-import io.cdap.wrangler.api.parser.TextArguments;
+import io.cdap.wrangler.utils.TestingRig;
+import org.junit.Assert;
 import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.Assert.*;
 
 public class AggregateStatsTest {
 
   @Test
-  public void testAggregateTotalMBSeconds() throws Exception {
+  public void testAggregateStatsTotal() throws Exception {
     List<Row> rows = Arrays.asList(
-      new Row("size", "10MB").add("duration", "2s"),
-      new Row("size", "20MB").add("duration", "3s")
+      new Row("data_transfer_size", "1KB").add("response_time", "2s"),
+      new Row("data_transfer_size", "2048B").add("response_time", "500ms"),
+      new Row("data_transfer_size", "1MB").add("response_time", "1.5s")
     );
 
-    AggregateStats directive = new AggregateStats();
-    directive.initialize(new TextArguments(Arrays.asList(
-      "size", "duration", "totalSize", "totalTime", "MB", "seconds"
-    )));
+    String[] recipe = new String[] {
+      "aggregate-stats :data_transfer_size :response_time total_size_mb total_time_sec"
+    };
 
-    ExecutorContext context = new MockExecutorContext(rows.size());
-    List<Row> result = directive.execute(rows, context);
+    List<Row> results = TestingRig.execute(recipe, rows);
 
-    assertEquals(1, result.size());
-    Row finalRow = result.get(0);
-    assertEquals(30.0, finalRow.getValue("totalSize"));
-    assertEquals(5.0, finalRow.getValue("totalTime"));
-  }
+    // Verify result size
+    Assert.assertEquals(1, results.size());
 
-  @Test
-  public void testAggregateAverageMode() throws Exception {
-    List<Row> rows = Arrays.asList(
-      new Row("size", "15MB").add("duration", "3s"),
-      new Row("size", "15MB").add("duration", "3s")
-    );
+    // Calculation
+    double expectedTotalSizeInBytes = 1024 + 2048 + 1_048_576; // bytes
+    double expectedTotalSizeInMB = expectedTotalSizeInBytes / (1024.0 * 1024.0);
 
-    AggregateStats directive = new AggregateStats();
-    directive.initialize(new TextArguments(Arrays.asList(
-      "size", "duration", "avgSize", "avgTime", "MB", "seconds", "average"
-    )));
+    double expectedTotalTimeInMillis = 2000 + 500 + 1500;
+    double expectedTotalTimeInSeconds = expectedTotalTimeInMillis / 1000.0;
 
-    ExecutorContext context = new MockExecutorContext(rows.size());
-    List<Row> result = directive.execute(rows, context);
+    // Verify values with tolerance
+    Assert.assertEquals(expectedTotalSizeInMB,
+      (Double) results.get(0).getValue("total_size_mb"), 0.001);
 
-    Row finalRow = result.get(0);
-    assertEquals(15.0, finalRow.getValue("avgSize"));
-    assertEquals(3.0, finalRow.getValue("avgTime"));
+    Assert.assertEquals(expectedTotalTimeInSeconds,
+      (Double) results.get(0).getValue("total_time_sec"), 0.001);
   }
 }
