@@ -92,55 +92,60 @@ public final class UsageDefinition implements Serializable {
    * @return a usage representation of this object.
    */
   @Override
-  public String toString() {
+ @Override
+public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append(directive).append(" ");
 
     int count = tokens.size();
     for (TokenDefinition token : tokens) {
-      if (token.optional()) {
-        sb.append(" [");
-      }
-
-      if (token.label() != null) {
-        sb.append(token.label());
-      } else {
-        if (token.type().equals(TokenType.DIRECTIVE_NAME)) {
-          sb.append(token.name());
-        } else if (token.type().equals(TokenType.COLUMN_NAME)) {
-          sb.append(":").append(token.name());
-        } else if (token.type().equals(TokenType.COLUMN_NAME_LIST)) {
-          sb.append(":").append(token.name()).append(" [,:").append(token.name()).append("  ]*");
-        } else if (token.type().equals(TokenType.BOOLEAN)) {
-          sb.append(token.name()).append(" (true/false)");
-        } else if (token.type().equals(TokenType.TEXT)) {
-          sb.append("'").append(token.name()).append("'");
-        } else if (token.type().equals(TokenType.IDENTIFIER) || token.type().equals(TokenType.NUMERIC)) {
-          sb.append(token.name());
-        } else if (token.type().equals(TokenType.BOOLEAN_LIST) || token.type().equals(TokenType.NUMERIC_LIST)
-          || token.type().equals(TokenType.TEXT_LIST)) {
-          sb.append(token.name()).append("[,").append(token.name()).append(" ...]*");
-        } else if (token.type().equals(TokenType.EXPRESSION)) {
-          sb.append("exp:{<").append(token.name()).append(">}");
-        } else if (token.type().equals(TokenType.PROPERTIES)) {
-          sb.append("prop:{key:value,[key:value]*");
-        } else if (token.type().equals(TokenType.RANGES)) {
-          sb.append("start:end=[bool|text|numeric][,start:end=[bool|text|numeric]*");
+        if (token.optional()) {
+            sb.append(" [");
         }
-      }
 
-      count--;
-
-      if (token.optional()) {
-        sb.append("]");
-      } else {
-        if (count > 0) {
-          sb.append(" ");
+        if (token.label() != null) {
+            sb.append(token.label());
+        } else {
+            if (token.type().equals(TokenType.DIRECTIVE_NAME)) {
+                sb.append(token.name());
+            } else if (token.type().equals(TokenType.COLUMN_NAME)) {
+                sb.append(":").append(token.name());
+            } else if (token.type().equals(TokenType.COLUMN_NAME_LIST)) {
+                sb.append(":").append(token.name()).append(" [,:").append(token.name()).append("  ]*");
+            } else if (token.type().equals(TokenType.BOOLEAN)) {
+                sb.append(token.name()).append(" (true/false)");
+            } else if (token.type().equals(TokenType.TEXT)) {
+                sb.append("'").append(token.name()).append("'");
+            } else if (token.type().equals(TokenType.IDENTIFIER) || token.type().equals(TokenType.NUMERIC)) {
+                sb.append(token.name());
+            } else if (token.type().equals(TokenType.BOOLEAN_LIST) || token.type().equals(TokenType.NUMERIC_LIST)
+                    || token.type().equals(TokenType.TEXT_LIST)) {
+                sb.append(token.name()).append("[,").append(token.name()).append(" ...]*");
+            } else if (token.type().equals(TokenType.EXPRESSION)) {
+                sb.append("exp:{<").append(token.name()).append(">}");
+            } else if (token.type().equals(TokenType.PROPERTIES)) {
+                sb.append("prop:{key:value,[key:value]*");
+            } else if (token.type().equals(TokenType.RANGES)) {
+                sb.append("start:end=[bool|text|numeric][,start:end=[bool|text|numeric]*");
+            } else if (token.type().equals(TokenType.BYTE_SIZE)) {
+                sb.append("byte_size:{").append(token.name()).append(" (e.g., 10MB, 1GB)}");
+            } else if (token.type().equals(TokenType.TIME_DURATION)) {
+                sb.append("time_duration:{").append(token.name()).append(" (e.g., 30m, 2h, 1d)}");
+            }
         }
-      }
+
+        count--;
+
+        if (token.optional()) {
+            sb.append("]");
+        } else {
+            if (count > 0) {
+                sb.append(" ");
+            }
+        }
     }
     return sb.toString();
-  }
+}
 
   /**
    * This is a static method for creating a builder for the <code>UsageDefinition</code>
